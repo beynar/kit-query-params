@@ -2,8 +2,12 @@ import type { SvelteURLSearchParams } from 'svelte/reactivity';
 import type { Default, Primitive, Schema, SchemaOutput } from './types.js';
 import { coercePrimitive, validateEnum } from './coerce.js';
 
-export const debounce = (fn: () => void, delay: number) => {
+export const debounce = (fn: () => void, delay: number | false) => {
 	let timeout: number;
+	// if no delay, no debounce
+	if (delay === false) {
+		return () => {};
+	}
 	return () => {
 		clearTimeout(timeout);
 		timeout = setTimeout(fn, delay);

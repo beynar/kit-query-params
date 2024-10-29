@@ -1,9 +1,9 @@
 {
 	"name": "kit-query-params",
-	"version": "0.0.24",
+	"version": "0.0.26",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && npm run package",
+		"build": "vite build && npm ru0.àn package",
 		"preview": "vite preview",
 		"package": "svelte-kit sync && svelte-package && publint",
 		"prepublishOnly": "npm run package",

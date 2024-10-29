@@ -71,7 +71,7 @@ export type Opts<
 	schema: S;
 	default?: D;
 	enforceDefault?: Enforce;
-	debounce?: number;
+	debounce?: number | false;
 	pushHistory?: boolean;
 	twoWayBinding?: boolean;
 	preserveUnknownParams?: boolean;

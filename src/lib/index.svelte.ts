@@ -85,7 +85,7 @@ export const queryParamsState = <
 			}
 		});
 
-	const updateLocation = debounce(() => {
+	const sync = () => {
 		cleanUnknownParams();
 		const query = searchParams.toString();
 		const hash = window.location.hash;
@@ -107,7 +107,9 @@ export const queryParamsState = <
 
 			invalidations.forEach(invalidate);
 		}
-	}, debounceTime);
+	};
+
+	const debouncedSync = debounce(sync, debounceTime);
 
 	const reset = (_enforceDefault = enforceDefault) => {
 		Array.from(searchParams.keys()).forEach((key) => {
@@ -120,7 +122,7 @@ export const queryParamsState = <
 			current,
 			parseURL(searchParams, schema, _enforceDefault ? defaultValue : undefined)
 		);
-		updateLocation();
+		debouncedSync();
 	};
 
 	const updateSearchParams = (key: string, stringified: string | null) => {
@@ -129,7 +131,7 @@ export const queryParamsState = <
 		} else if (searchParams.get(key) !== stringified) {
 			searchParams.set(key, stringified);
 		}
-		updateLocation();
+		debouncedSync();
 	};
 
 	return createProxy<T, D, Enforce>(current, {
@@ -141,11 +143,12 @@ export const queryParamsState = <
 					searchParams.delete(key);
 				}
 			});
-			updateLocation();
+			debouncedSync();
 		},
 		default: defaultValue,
 		enforceDefault,
 		searchParams,
+		sync,
 		reset
 	});
 };

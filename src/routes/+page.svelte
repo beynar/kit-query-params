@@ -20,7 +20,8 @@
 		default: {
 			search: 'caca',
 			enum: 'test2'
-		}
+		},
+		debounce: false
 
 		// enforceDefault: true
 	});
@@ -52,6 +53,9 @@
 	</div>
 
 	<div class="flex gap-4 flex-wrap">
+		{@render button('sync', () => {
+			queryParams.$sync();
+		})}
 		{@render button('Reassign tags', () => {
 			queryParams.tags = [0, 1, 2];
 		})}

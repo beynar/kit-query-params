@@ -19,11 +19,13 @@ export const createProxy = <
 		path = '',
 		array,
 		default: defaultValue,
+		sync,
 		enforceDefault
 	}: {
 		schema: T;
 		enforceDefault?: boolean;
 		onUpdate: (path: string, value: any) => void;
+		sync: () => void;
 		clearPaths?: (path: string) => void;
 		searchParams: SvelteURLSearchParams | URLSearchParams;
 		reset: () => void;
@@ -40,6 +42,10 @@ export const createProxy = <
 
 			if (key === '$reset') {
 				return reset;
+			}
+
+			if (key === '$sync') {
+				return sync;
 			}
 
 			const value = Reflect.get(target, key);
@@ -106,6 +112,7 @@ export const createProxy = <
 					onUpdate,
 					searchParams,
 					clearPaths,
+					sync,
 					reset,
 					path: path ? `${path}.${key}` : key,
 					array: Array.isArray(value) ? value : undefined,
@@ -185,5 +192,6 @@ export const createProxy = <
 	return new Proxy(obj, handler) as Simplify<SchemaOutput<T, D, Enforce>> & {
 		$searchParams: SvelteURLSearchParams;
 		$reset: (enforceDefault?: boolean) => void;
+		$sync: () => void;
 	};
 };
