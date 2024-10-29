@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { queryParams } from '$lib/index.svelte.js';
+	import { queryParamsState } from '$lib/index.svelte.js';
 
 	let { data } = $props();
 
 	$inspect(data);
-	const params = queryParams({
+	const queryParams = queryParamsState({
 		schema: {
 			search: 'string',
 			tags: ['number'],
@@ -24,7 +24,6 @@
 
 		// enforceDefault: true
 	});
-
 	const tag = $state({ name: 'one', value: 2 });
 	const object = $state({
 		object: {
@@ -46,60 +45,61 @@
 	<div class="max-w-full mx-auto mt-24">
 		<div class="bg-gray-900 text-white p-4 rounded-md">
 			<div class="overflow-x-visible">
-				<pre id="code" class="text-gray-300"><code>{JSON.stringify(params, null, 2)}</code></pre>
+				<pre id="code" class="text-gray-300"><code>{JSON.stringify(queryParams, null, 2)}</code
+					></pre>
 			</div>
 		</div>
 	</div>
 
 	<div class="flex gap-4 flex-wrap">
 		{@render button('Reassign tags', () => {
-			params.tags = [0, 1, 2];
+			queryParams.tags = [0, 1, 2];
 		})}
 		{@render button('Push a state', () => {
-			params.tags.push(tag.value);
+			queryParams.tags.push(tag.value);
 		})}
 		{@render button('fitler tag', () => {
-			params.tags = params.tags.filter((t) => t !== 2);
+			queryParams.tags = queryParams.tags.filter((t) => t !== 2);
 		})}
 		{@render button('Push into enum', () => {
-			params.enums.push('test2');
+			queryParams.enums.push('test2');
 		})}
 		{@render button('Assign object', () => {
-			params.object = object;
+			queryParams.object = object;
 		})}
 		{@render button('Set nested property', () => {
-			params.object.object.string = params.object.object.string + ' string';
+			queryParams.object.object.string = queryParams.object.object.string + ' string';
 		})}
 		{@render button('Set enum', () => {
-			params.enum = params.enum === 'test2' ? null : 'test2';
+			queryParams.enum = queryParams.enum === 'test2' ? null : 'test2';
 		})}
 		{@render button('Push wrong enum', () => {
-			params.enums.push('prout');
+			queryParams.enums.push('prout');
 		})}
 		{@render button('Reset', () => {
-			params.$reset();
+			queryParams.$reset();
 		})}
 		{@render button('Reset to default', () => {
-			params.$reset(true);
+			queryParams.$reset(true);
 		})}
 
 		<button
 			onclick={() => {
-				params.object.object.string = params.object.object.string + ' string';
+				queryParams.object.object.string = queryParams.object.object.string + ' string';
 			}}
 		>
-			Set nested : {params.object.object.string}
+			Set nested : {queryParams.object.object.string}
 		</button>
 		<button
 			onclick={() => {
-				params.$reset();
+				queryParams.$reset();
 			}}
 		>
 			reset
 		</button>
 		<button
 			onclick={() => {
-				const search = new URLparams(window.location.search);
+				const search = new URLqueryParams(window.location.search);
 				search.set('search', 'prout');
 				goto(`?${search.toString()}`, {
 					keepFocus: true,
@@ -112,6 +112,6 @@
 			Go to
 		</button>
 
-		<input bind:value={params.search} />
+		<input bind:value={queryParams.search} />
 	</div>
 </div>
